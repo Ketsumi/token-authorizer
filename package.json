@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/Ketsumi/token-authorizer/issues"
   },
-  "homepage": "https://github.com/Ketsumi/token-authorizer#readme"
+  "homepage": "https://github.com/Ketsumi/token-authorizer#readme",
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1"
+  }
 }
