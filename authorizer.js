@@ -15,7 +15,7 @@ authorizer.decodeToken = token => {
 		const decoded = jwt.verify(token, SECRET_KEY);
 
 		return decoded;
-	} catch(err) {
+	} catch (err) {
 		console.log(err);
 
 		return null;

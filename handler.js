@@ -3,15 +3,45 @@
 const authorizer = require('./authorizer');
 const policy = require('./policy');
 
-exports.handler = async (ev, ct, cb) => {
-	const payload = ev.body;
-	const token = ev.authorizationToken;
+exports.authorize = async (ev, ct, cb) => {
+	const response = {};
 	
-	if (!token) {
-		return generateToken(ev.body);
-	} else {
-		return policy.generatePolicy(token, ev.methodArn);
+	console.log('\nEVENT');
+	// console.log(ev);
+
+	try {
+		const token = ev.authorizationToken;
+		const methodArn = ev.methodArn;
+		
+		if (!token) {
+			console.log('\nToken not found. \nGenerating new token...');
+			
+			response.body = generateToken(ev.body);
+			
+			console.log('\n' + response.body);
+			
+			return respond({ token: response.body, event: ev }, 200, cb);
+		} else {
+			console.log(`Token found: \n${token}`);
+			
+			response.body = generatePolicy(token, methodArn);
+			
+			console.log(`Policy generated: \n${response.body}`);
+			
+			return cb(null, response.body);
+		}
+	} catch (err) {
+		return cb(err.message);
 	}
+};
+
+function respond(body, statusCode, callback) {
+	const response = {
+		statusCode: statusCode,
+		body: JSON.stringify(body)
+	};
+
+	callback(null, response);
 }
 
 function generateToken(payload) {
@@ -19,5 +49,8 @@ function generateToken(payload) {
 }
 
 function generatePolicy(token, methodArn) {
+	console.log(token);
+	console.log(methodArn);
+
 	return policy.generatePolicy(token, methodArn);
 }

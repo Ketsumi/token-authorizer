@@ -12,7 +12,7 @@ policy.generatePolicy = (token, methodArn) => {
 	} else {
 		console.log('ERROR: Token validation failed.');
 
-		return new Error('Unauthorized');
+		throw new Error('Unauthorized');
 	}
 }
 
